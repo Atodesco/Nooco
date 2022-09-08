@@ -37,4 +37,16 @@ router.get("/products", async (req, res) => {
   }
 });
 
+router.post("/flight", async (req, res) => {
+  const flight_data = await fetch(
+    "https://api.v2.emissions-api.org/api/v2/" +
+      "" +
+      "/statistics.json?polygon=30&polygon=10&polygon=40&polygon=40&polygon=20&polygon=40&polygon=10&polygon=20&polygon=30&polygon=10&interval=day&begin=2019-02-10&end=2019-02-11&limit=100&offset=0"
+  );
+  console.log(req.body.departure);
+});
+
+var test = router.post("/flight");
+//console.log(test);
+
 module.exports = router;
