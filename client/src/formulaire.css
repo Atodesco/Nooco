@@ -1,0 +1,26 @@
+.Formulaire1 {
+    height: 20vh;
+    width:20vw;
+    margin:0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.Formulaire2 {
+    height: 20vh;
+    width:20vw;
+    margin:0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.Date {
+    height: 20vh;
+    width:20vw;
+    margin:0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
