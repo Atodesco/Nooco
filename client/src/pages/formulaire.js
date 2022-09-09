@@ -22,6 +22,9 @@ export default function Formulaire() {
   const [departure, setDeparture] = useState("");
   const [arrival, setArrival] = useState("");
 
+  // const [dep, setDep] = useState("");
+  // const [arr, setArr] = useState("");
+
   useEffect(() => {
     async function fetchData() {
       const data = await fetch("http://localhost:9000/API/products");
@@ -31,15 +34,6 @@ export default function Formulaire() {
     }
     fetchData();
   }, []);
-  // useEffect(() => {
-  //   async function fetchDataCountries() {
-  //     const data_countries = await fetch("http://localhost:9000/API/countries");
-  //     console.log(data_countries);
-  //     const data_countriesjson = await data_countries.json();
-  //     setCountries(data_countriesjson);
-  //   }
-  //   fetchDataCountries();
-  // }, []);
   const [choice, setChoice] = useState("");
   const handleChange = (e) => {
     setChoice(e.target.value);
@@ -48,8 +42,7 @@ export default function Formulaire() {
   Geocode.setApiKey("AIzaSyAeWom0q8-MV4K3W5vdVzO5MpVvWgJNZP8");
   Geocode.setLocationType("ROOFTOP");
   Geocode.setLanguage("fr");
-
-  //END geocode
+  //END geocode//
 
   return (
     <div>
@@ -125,34 +118,47 @@ export default function Formulaire() {
       </div>
       <div className="Button">
         <Button
-          onClick={() => {
-            let dep;
-            Geocode.fromAddress(departure).then(
-              (response) => {
-                dep = response.results[0].geometry.location;
-                console.log("departure", dep.lat, dep.lng);
-              },
-              (error) => {
-                console.error(error);
-              }
-            );
-            let arr;
-            Geocode.fromAddress(arrival).then(
-              (response) => {
-                arr = response.results[0].geometry.location;
-                console.log("arrival", arr.lat, arr.lng);
-              },
-              (error) => {
-                console.error(error);
-              }
-            );
+          onClick={async function () {
+            // Geocode.fromAddress(departure).then(
+            //   (response) => {
+            //     setDep(response.results[0].geometry.location);
+            //     console.log("departure", dep.lat, dep.lng);
+            //   },
+            //   (error) => {
+            //     console.error(error);
+            //   }
+            // );
+            const rawd = await Geocode.fromAddress(departure);
+            const data_departure = rawd.results[0].geometry.location;
+            console.log("datadeparture", data_departure);
+            //setDep(data);
+
+            const rawa = await Geocode.fromAddress(arrival);
+            const data_arrival = rawa.results[0].geometry.location;
+            console.log("datadeparture", data_arrival);
+            //setDep(data);
+            // Geocode.fromAddress(arrival).then(
+            //   (response) => {
+            //     setArr(response.results[0].geometry.location);
+            //     console.log("dataarrival", arr.lat, arr.lng);
+            //   },
+            //   (error) => {
+            //     console.error(error);
+            //   }
+            // );
+
+            console.log("frontdep", data_departure);
+            console.log("frontarr", data_arrival);
+            console.log("startdate", startDate);
             fetch("http://localhost:9000/API/flight", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
-                departure: dep,
-                arrival: arr,
+                departure: data_departure,
+                arrival: data_arrival,
                 product: choice,
+                startdate: startDate,
+                enddate: endDate,
               }),
             });
           }}
