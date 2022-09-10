@@ -215,6 +215,10 @@ export default function Formulaire() {
             console.log("ALLfrontDATA", data_stopover);
             console.log("frontdep", data_departure);
             console.log("frontarr", data_arrival);
+            let tmpstart = startDate;
+            tmpstart.setDate(tmpstart.getDate() + 1);
+            let tmpend = endDate;
+            tmpend.setDate(tmpend.getDate() + 1);
             const response = await fetch("http://localhost:9000/API/flight", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
@@ -222,8 +226,8 @@ export default function Formulaire() {
                 departure: data_departure,
                 arrival: data_arrival,
                 product: choice,
-                startdate: startDate,
-                enddate: endDate,
+                startdate: tmpstart,
+                enddate: tmpend,
                 stopover: data_stopover,
               }),
             });
