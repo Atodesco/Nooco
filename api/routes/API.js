@@ -38,44 +38,37 @@ router.get("/products", async (req, res) => {
 
 router.post("/flight", async (req, res) => {
   try {
-    const flight_data = await fetch(
+    let flag = "geoframe=";
+    let alldata = [];
+    alldata.push(req.body.departure.lat);
+    alldata.push(req.body.departure.lng);
+    for (let i = 0; i < req.body.stopover.length; i++) {
+      alldata.push(req.body.stopover[i].lat);
+      alldata.push(req.body.stopover[i].lng);
+    }
+    alldata.push(req.body.arrival.lat);
+    alldata.push(req.body.arrival.lng);
+    console.log("alldata", alldata);
+    if (req.body.stopover.length != 0) flag = "polygon=";
+    let link =
       "https://api.v2.emissions-api.org/api/v2/" +
-        req.body.product.name +
-        "/statistics.json?" +
-        "geoframe=" +
-        req.body.departure.lat +
-        "&geoframe=" +
-        req.body.departure.lng +
-        "&geoframe=" +
-        //ici on ajoutera les destinations supplementaires
-        req.body.arrival.lat +
-        "&geoframe=" +
-        req.body.arrival.lng +
-        "&interval=day&begin=" +
-        req.body.startdate.slice(0, 10) +
-        "&end=" +
-        req.body.enddate.slice(0, 10) +
-        "&limit=100&offset=0"
-    );
-    console.log(
-      "https://api.v2.emissions-api.org/api/v2/" +
-        req.body.product.name +
-        "/statistics.json?" +
-        "geoframe=" +
-        req.body.departure.lat +
-        "&geoframe=" +
-        req.body.departure.lng +
-        "&geoframe=" +
-        //ici on ajoutera les destinations supplementaires
-        req.body.arrival.lat +
-        "&geoframe=" +
-        req.body.arrival.lng +
-        "&interval=day&begin=" +
-        req.body.startdate.slice(0, 10) +
-        "&end=" +
-        req.body.enddate.slice(0, 10) +
-        "2019-02-11&limit=100&offset=0"
-    );
+      req.body.product.name +
+      "/statistics.json?";
+    for (let i = 0; i < alldata.length; i++) {
+      if (i != 0) {
+        link += "&";
+      }
+      link += flag;
+      link += alldata[i];
+    }
+    link +=
+      "&interval=day&begin=" +
+      req.body.startdate.slice(0, 10) +
+      "&end=" +
+      req.body.enddate.slice(0, 10) +
+      "&limit=100&offset=0";
+    const flight_data = await fetch(link);
+    console.log(link);
     const flight_dataJson = await flight_data.json();
     res.send(flight_dataJson);
     console.log("log", flight_dataJson);

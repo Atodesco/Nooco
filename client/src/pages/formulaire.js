@@ -25,6 +25,9 @@ export default function Formulaire() {
   // const [dep, setDep] = useState("");
   // const [arr, setArr] = useState("");
 
+  const [counter, setCounter] = useState(0);
+  const [stopover, setStopover] = useState([""]);
+
   useEffect(() => {
     async function fetchData() {
       const data = await fetch("http://localhost:9000/API/products");
@@ -43,6 +46,7 @@ export default function Formulaire() {
   Geocode.setLocationType("ROOFTOP");
   Geocode.setLanguage("fr");
   //END geocode//
+  const board = new Array(counter).fill(0);
 
   return (
     <div>
@@ -95,6 +99,52 @@ export default function Formulaire() {
           />
         </div>
       </div>
+      <Button
+        variant="outlined"
+        onClick={() => {
+          setCounter(counter + 1);
+          const tmp = [...stopover, ""];
+          console.log("add", tmp);
+          setStopover(tmp);
+        }}
+      >
+        ADD STOPOVER
+      </Button>
+      <Button
+        variant="outlined"
+        onClick={() => {
+          if (counter > 0) {
+            if (counter - 1 == 0) {
+              setStopover([""]);
+            } else {
+              let tmp = stopover.slice(0, -1);
+              console.log("remove", tmp);
+              setStopover(tmp);
+            }
+            setCounter(counter - 1);
+          }
+        }}
+      >
+        REMOVE STOPOVER
+      </Button>
+      {board.map((v, k) => {
+        return (
+          <div className="Stopover" key={k}>
+            <TextField
+              onChange={(e) => {
+                let tmp = stopover.slice();
+                tmp[k] = e.target.value;
+                setStopover(tmp);
+              }}
+              value={stopover[k]}
+              id="outlined-basic"
+              label="Departure"
+              variant="outlined"
+            />
+          </div>
+        );
+      })}
+
       <div className="Date">
         <DatePicker
           placeholderText="Date Departure"
@@ -116,41 +166,56 @@ export default function Formulaire() {
           onChange={(date) => setEndDate(date)}
         />
       </div>
+      {/* <Button
+        variant="outlined"
+        onClick={() => {
+          setCounter(counter + 1);
+          const tmp = [...stopover, ""];
+          console.log("add", tmp);
+          setStopover(tmp);
+        }}
+      >
+        ADD FLIGHT
+      </Button>
+      <Button
+        variant="outlined"
+        onClick={() => {
+          if (counter > 0) {
+            if (counter - 1 == 0) {
+              setStopover([""]);
+            } else {
+              let tmp = stopover.slice(0, -1);
+              console.log("remove", tmp);
+              setStopover(tmp);
+            }
+            setCounter(counter - 1);
+          }
+        }}
+      >
+        REMOVE FLIGHT
+      </Button> */}
       <div className="Button">
         <Button
           onClick={async function () {
-            // Geocode.fromAddress(departure).then(
-            //   (response) => {
-            //     setDep(response.results[0].geometry.location);
-            //     console.log("departure", dep.lat, dep.lng);
-            //   },
-            //   (error) => {
-            //     console.error(error);
-            //   }
-            // );
             const rawd = await Geocode.fromAddress(departure);
             const data_departure = rawd.results[0].geometry.location;
             console.log("datadeparture", data_departure);
-            //setDep(data);
 
             const rawa = await Geocode.fromAddress(arrival);
             const data_arrival = rawa.results[0].geometry.location;
-            console.log("datadeparture", data_arrival);
-            //setDep(data);
-            // Geocode.fromAddress(arrival).then(
-            //   (response) => {
-            //     setArr(response.results[0].geometry.location);
-            //     console.log("dataarrival", arr.lat, arr.lng);
-            //   },
-            //   (error) => {
-            //     console.error(error);
-            //   }
-            // );
+            console.log("dataarrival", data_arrival);
+            let data_stopover = [];
+            for (let i = 0; i < stopover.length - 1; i++) {
+              console.log("text");
+              const raws = await Geocode.fromAddress(stopover[i]);
+              data_stopover.push(raws.results[0].geometry.location);
+              console.log("datastopover", data_stopover[i]);
+            }
 
+            console.log("ALLfrontDATA", data_stopover);
             console.log("frontdep", data_departure);
             console.log("frontarr", data_arrival);
-            console.log("startdate", startDate);
-            fetch("http://localhost:9000/API/flight", {
+            const response = await fetch("http://localhost:9000/API/flight", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
@@ -159,8 +224,11 @@ export default function Formulaire() {
                 product: choice,
                 startdate: startDate,
                 enddate: endDate,
+                stopover: data_stopover,
               }),
             });
+            const responseJson = await response.json();
+            console.log(responseJson);
           }}
           variant="contained"
         >
