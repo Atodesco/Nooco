@@ -1,0 +1,34 @@
+version: "3.9"
+
+services:
+
+  backend:
+    build:
+      context: ./docker
+      dockerfile: ./backend.dockerfile
+    ports:
+      - 9000:9000
+    networks:
+      - backend
+    volumes:
+      - ./api:/app
+  
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./docker
+      dockerfile: ./frontend.dockerfile
+    ports:
+      - 3000:3000
+    networks:
+      - backend
+    volumes:
+      - ./client:/app
+
+    restart: unless-stopped
+    depends_on:
+      - backend
+
+networks:
+  backend:

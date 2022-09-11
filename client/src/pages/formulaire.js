@@ -43,13 +43,10 @@ export default function Formulaire() {
   const [openModal, SetOpenModal] = useState(false);
 
   const [allprint, setAllPrint] = useState([]);
-  // const handleChange = (e) => {
-  //   setChoice(e.target.value);
-  // };
+
   useEffect(() => {
     async function fetchData() {
       const data = await fetch("http://localhost:9000/API/products");
-      console.log(data);
       const datajson = await data.json();
       setProducts(datajson);
     }
@@ -62,13 +59,11 @@ export default function Formulaire() {
   //END geocode//
   // const board = new Array(counter).fill(0);
   let board = [];
-  //console.log("COUNTER", counter.length);
   for (let i = 0; i < counter.length; i++) {
     // for (let j = 0; j < counter[i]; j++) {
     //   board.push(0);
     // }
 
-    //console.log("TEXTBOARD", board[i]);
     board[i] = new Array(counter[i]).fill(0);
   }
 
@@ -200,14 +195,13 @@ export default function Formulaire() {
                   tmp2[k] += 1;
                   setCounter(tmp2);
                   let tmp = stopover;
-                  //console.log("avant", tmp);
+
                   tmp[k].push("");
-                  //console.log("apres", tmp);
+
                   setStopover(tmp);
 
                   forceUpdate();
                   // const tmp = [...stopover, ""];
-                  // console.log("add", tmp);
                   // setStopover(tmp);
                 }}
               >
@@ -218,7 +212,6 @@ export default function Formulaire() {
                 onClick={() => {
                   if (counter[k] > 0) {
                     // if (counter - 1 == 0) {
-                    //   console.log("CA DECONNE ICI");
                     //   setStopover([""]);
                     // } else {}
                     let tmp = stopover.slice();
@@ -236,7 +229,6 @@ export default function Formulaire() {
 
             {counter[k] > 0 &&
               [...Array(counter[k])].map((v, m) => {
-                console.log("est ce quon revient ici?");
                 return (
                   <div className="Stopover" key={m}>
                     <TextField
@@ -294,23 +286,18 @@ export default function Formulaire() {
           onClick={async function () {
             let tmpprint = [];
             for (let j = 0; j < counter2; j++) {
+              if (!choice[j]) continue;
               const rawd = await Geocode.fromAddress(departure[j]);
               const data_departure = rawd.results[0].geometry.location;
-              console.log("datadeparture", data_departure);
 
               const rawa = await Geocode.fromAddress(arrival[j]);
               const data_arrival = rawa.results[0].geometry.location;
-              console.log("dataarrival", data_arrival);
               let data_stopover = [];
               for (let i = 0; i < stopover[j].length - 1; i++) {
                 const raws = await Geocode.fromAddress(stopover[j][i]);
                 data_stopover.push(raws.results[0].geometry.location);
-                console.log("datastopover", data_stopover[i]);
               }
 
-              console.log("ALLfrontDATA", data_stopover);
-              console.log("frontdep", data_departure);
-              console.log("frontarr", data_arrival);
               let tmpstart = startDate[j];
               tmpstart.setDate(tmpstart.getDate() + 1);
               let tmpend = endDate[j];
@@ -328,7 +315,6 @@ export default function Formulaire() {
                 }),
               });
               const responseJson = await response.json();
-              console.log(responseJson);
               tmpprint.push(responseJson);
             }
             setAllPrint(tmpprint);
@@ -346,7 +332,6 @@ export default function Formulaire() {
         >
           <Box sx={style}>
             {allprint.map((v, k) => {
-              console.log("VVVVVVV", v);
               if (v.length == 0) {
                 return (
                   <div key={k}>
@@ -355,8 +340,6 @@ export default function Formulaire() {
                   </div>
                 );
               } else {
-                console.log("VVVVVVV2", v);
-                console.log("choiceK", choice[k]);
                 return (
                   <div key={k}>
                     <h1>Flight number {k + 1}</h1>
