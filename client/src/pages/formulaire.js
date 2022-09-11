@@ -139,7 +139,7 @@ export default function Formulaire() {
             {products && (
               <div className="Formulaire1">
                 <FormControl fullWidth>
-                  <InputLabel id="">Products</InputLabel>
+                  <InputLabel id="">Product</InputLabel>
                   <Select
                     labelId=""
                     id=""
@@ -284,6 +284,7 @@ export default function Formulaire() {
                 }}
               />
             </div>
+            <hr />
           </div>
         );
       })}

@@ -54,9 +54,14 @@
 }
 
 .Stopover{
-    height: 10vh;
+    height: 8vh;
     width:20vw;
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+hr {
+	border: 0;
+	border-top: 3px solid #094CFA;
 }
