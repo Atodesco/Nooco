@@ -99,11 +99,11 @@ export default function Formulaire() {
 
             let tmp4 = departure.slice();
             tmp4.push("");
-            setDeparture(tmp3);
+            setDeparture(tmp4);
 
             let tmp5 = arrival.slice();
             tmp5.push("");
-            setArrival(tmp3);
+            setArrival(tmp5);
           }}
         >
           ADD FLIGHT
@@ -120,6 +120,18 @@ export default function Formulaire() {
               let tmp2 = stopover.slice();
               tmp2.pop();
               setStopover(tmp2);
+
+              let tmp3 = choice.slice();
+              tmp3.pop();
+              setChoice(tmp3);
+
+              let tmp4 = departure.slice();
+              tmp4.pop();
+              setDeparture(tmp4);
+
+              let tmp5 = arrival.slice();
+              tmp5.pop();
+              setArrival(tmp5);
             }
           }}
         >
